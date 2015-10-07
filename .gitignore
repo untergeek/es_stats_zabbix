@@ -2,6 +2,9 @@
 __pycache__/
 *.py[cod]
 
+# Test config files
+es_stats_zabbix.ini
+
 # C extensions
 *.so
 

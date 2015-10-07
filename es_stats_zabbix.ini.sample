@@ -1,0 +1,60 @@
+[elasticsearch]
+host = 127.0.0.1
+port = 9200
+
+; Whether or not to use SSL
+use_ssl = False
+
+; Provide your own certificate for verification
+certificate = None
+
+; If true, do not validate SSL certificates
+ssl_no_validate = False
+
+; http_auth should be in user:pass format
+http_auth = None
+
+; If true, connect only if client is the elected master node
+master_only = False
+
+; Timeout to connect to Elasticsearch.  Default is 10 seconds
+timeout = 10
+
+[logging]
+;debug setting is overridden by the command-line arg, if present
+debug = False
+loglevel = INFO
+
+;logfile = /path/to/logfile
+logfile = es_stats_zabbix.log
+
+; can be default or logstash (JSON logging)
+logformat = default
+
+[batch]
+; Zabbix server address
+server = 127.0.0.1
+
+; Zabbix server port
+port = 10051
+
+; Zabbix host (where the items will go)
+host = zabbix_host
+
+; Node name (Required for nodestats and nodeinfo)
+node = Your_Node_Name
+
+; clusterhealth = key1,key2,key3,...,keyN
+clusterhealth = status,number_of_nodes,unassigned_shards,active_primary_shards,relocating_shards,active_shards,initializing_shards,number_of_data_nodes,delayed_unassigned_shards
+
+; clusterstats = key1,key2,key3,...,keyN
+clusterstats = indices.segments.count
+
+; clusterstate = key1,key2,key3,...,keyN
+clusterstate = master_node
+
+; nodestats = key1,key2,key3,...,keyN
+nodestats = thread_pool.search.completed
+
+; nodeinfo = key1,key2,key3,...,keyN
+nodeinfo = process.max_file_descriptors

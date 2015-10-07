@@ -1,0 +1,4 @@
+elasticsearch>=1.6.0
+es_stats>=0.0.4
+click>=3.3
+zbxsend>=0.1.6
