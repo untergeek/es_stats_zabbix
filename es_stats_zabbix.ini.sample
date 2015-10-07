@@ -41,20 +41,33 @@ port = 10051
 ; Zabbix host (where the items will go)
 host = zabbix_host
 
-; Node name (Required for nodestats and nodeinfo)
-node = Your_Node_Name
+; Keys can be of any label other than the above
+key1  = health[status]
+key2  = health[number_of_nodes]
+key3  = health[unassigned_shards]
+key4  = health[active_primary_shards]
+key5  = health[relocating_shards]
+key6  = health[active_shards]
+key7  = health[initializing_shards]
+key8  = health[number_of_data_nodes]
+key9  = health[delayed_unassigned_shards]
 
-; clusterhealth = key1,key2,key3,...,keyN
-clusterhealth = status,number_of_nodes,unassigned_shards,active_primary_shards,relocating_shards,active_shards,initializing_shards,number_of_data_nodes,delayed_unassigned_shards
+key10 = clusterstats[indices.store.size_in_bytes]
+key11 = clusterstats[indices.count]
+key12 = clusterstats[indices.docs.count]
+key13 = clusterstats[indices.fielddata.evictions]
+key14 = clusterstats[indices.fielddata.memory_size_in_bytes]
+key15 = clusterstats[indices.filter_cache.evictions]
+key16 = clusterstats[indices.filter_cache.memory_size_in_bytes]
 
-; clusterstats = key1,key2,key3,...,keyN
-clusterstats = indices.segments.count
+key17 = clusterstate[master_node]
 
-; clusterstate = key1,key2,key3,...,keyN
-clusterstate = master_node
+key18 = nodeinfo[YOUR_NODE_NAME,jvm.mem.heap_init_in_bytes]
+key19 = nodeinfo[YOUR_NODE_NAME,process.max_file_descriptors]
 
-; nodestats = key1,key2,key3,...,keyN
-nodestats = thread_pool.search.completed
-
-; nodeinfo = key1,key2,key3,...,keyN
-nodeinfo = process.max_file_descriptors
+key20 = nodestats[YOUR_NODE_NAME,process.open_file_descriptors]
+key21 = nodestats[YOUR_NODE_NAME,jvm.mem.heap_max_in_bytes]
+key22 = nodestats[YOUR_NODE_NAME,jvm.mem.heap_used_in_bytes]
+key23 = nodestats[YOUR_NODE_NAME,jvm.mem.heap_used_percent]
+key24 = nodestats[YOUR_NODE_NAME,jvm.gc.collectors.old.collection_count]
+key25 = nodestats[YOUR_NODE_NAME,jvm.gc.collectors.old.collection_time_in_millis]

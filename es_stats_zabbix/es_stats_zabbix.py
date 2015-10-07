@@ -48,7 +48,7 @@ def cli(ctx, configuration, debug):
             debug = False
 
     # Setup logging
-    if debug:
+    if debug or config.get('logging.loglevel').upper() == 'DEBUG':
         numeric_log_level = logging.DEBUG
         format_string = '%(asctime)s %(levelname)-9s %(name)22s %(funcName)22s:%(lineno)-4d %(message)s'
     else:
@@ -65,9 +65,13 @@ def cli(ctx, configuration, debug):
         handler.setFormatter(logging.Formatter(format_string))
     logging.root.addHandler(handler)
     logging.root.setLevel(numeric_log_level)
+    logger = logging.getLogger('es_stats_zabbix')
 
+    logger.info('Job starting.')
+    logger.debug('Logging config args: {0}'.format(config.get('logging')))
     # Fix bool and integer values to be correct
     client_args = fix_types(config.get('elasticsearch'))
+    logger.debug('Elasticsearch config args: {0}'.format(client_args))
 
     # Test whether certificate is a valid file path
     if client_args['use_ssl'] is True and client_args['certificate'] is not None:
@@ -92,7 +96,6 @@ def cli(ctx, configuration, debug):
     # instance in elasticsearch python client
     logging.getLogger('elasticsearch.trace').addHandler(NullHandler())
 
-    logging.info('Job starting.')
     # Put elasticsearch client into ctx.obj['client']
     ctx.obj['client'] = get_client(**client_args)
 
@@ -102,88 +105,55 @@ def cli(ctx, configuration, debug):
     del batches["logging"]
     ctx.obj['batches'] = batches
 
-@cli.command(short_help="Cluster Health")
-@click.option('--key', help="Dot-notation path to Cluster Health key", required=True)
+@cli.command(short_help="Single item mode")
+@click.argument('zabbixkey', nargs=1, required=True)
 @click.pass_context
-def health(ctx, key):
-    """Send back value for single cluster health key"""
-    ch = ClusterHealth(ctx.obj['client'])
-    click.echo(ch.get(key))
-
-@cli.command(short_help="Cluster Stats")
-@click.option('--key', help="Dot-notation path to Cluster Stats key", required=True)
-@click.pass_context
-def cluster_stats(ctx, key):
-    """Send back value for single cluster stats key"""
-    stats = ClusterStats(ctx.obj['client'])
-    click.echo(stats.get(key))
-
-@cli.command(short_help="Cluster State")
-@click.option('--key', help="Dot-notation path to Cluster State key", required=True)
-@click.pass_context
-def cluster_state(ctx, key):
-    """Send back value for single cluster state key"""
-    state = ClusterState(ctx.obj['client'])
-    click.echo(state.get(key))
-
-@cli.command(short_help="Node Stats")
-@click.option('--key', help="Dot-notation path to Node Stats key", required=True)
-@click.option('--node', help="Node name (not nodeid)", required=True)
-@click.pass_context
-def node_stats(ctx, key, node):
-    """Send back value for single node stats key"""
-    stats = NodeStats(ctx.obj['client'], node)
-    click.echo(stats.get(key))
-
-@cli.command(short_help="Node Info")
-@click.option('--key', help="Dot-notation path to Node Info key", required=True)
-@click.option('--node', help="Node name (not nodeid)", required=True)
-@click.pass_context
-def node_info(ctx, key, node):
-    """Send back value for single node info key"""
-    info = NodeInfo(ctx.obj['client'], node)
-    click.echo(info.get(key))
+def single(ctx, zabbixkey):
+    """Obtain and return value associated with zabbix key"""
+    logger = logging.getLogger('es_stats_zabbix') # Since logging is set up in cli()
+    logger.info('Single key: {0}'.format(zabbixkey))
+    ztuple = parse_key(zabbixkey)
+    apiobj = map_api(ztuple, ctx.obj['client'])
+    result = apiobj.get(ztuple[2], name=ztuple[1])
+    logger.debug('Result = {0}'.format(result))
+    click.echo(result)
+    logger.info('Job completed.')
 
 @cli.command(short_help="Batch mode")
-@click.option('--name', help="Batch name from within configuration file.")
+@click.option('--name', help="Batch name from within configuration file.", default="batch")
 @click.pass_context
 def batch(ctx, name):
     """Send values in batch to zabbix_host (server defined in config file)"""
+    logger = logging.getLogger('es_stats_zabbix') # Since logging is set up in cli()
+    logger.debug('Batch mode with named batch: {0}'.format(name))
     if name not in ctx.obj['batches']:
-        click.echo(click.style('Batch {0} not found in configuration file.'.format(batch), fg='red', bold=True))
+        click.echo(click.style('Batch {0} not found in configuration file.'.format(name), fg='red', bold=True))
         sys.exit(1)
     from zbxsend import Metric, send_to_zabbix
     b = ctx.obj['batches'][name]
+    logger.debug('Batch config args: {0}'.format(b))
     metrics = []
-    if b['clusterhealth']:
-        ch = ClusterHealth(ctx.obj['client'])
-        for k in b['clusterhealth'].split(','):
-            metrics.append(Metric(b['host'], 'health[' + k + ']', ch.get(k)))
-    if b['clusterstats']:
-        cs = ClusterStats(ctx.obj['client'])
-        for k in b['clusterstats'].split(','):
-            metrics.append(Metric(b['host'], 'clusterstats[' + k + ']', cs.get(k)))
-    if b['clusterstate']:
-        cte = ClusterState(ctx.obj['client'])
-        for k in b['clusterstate'].split(','):
-            metrics.append(Metric(b['host'], 'clusterstate[' + k + ']', cte.get(k)))
-    if b['nodestats']:
-        if not b['node']:
-            click.echo(click.style('Batch {0} is missing required parameter "node"'.format(name), fg='red', bold=True))
-            sys.exit(1)
-        ns = NodeStats(ctx.obj['client'], b['node'])
-        for k in b['nodestats'].split(','):
-            metrics.append(Metric(b['host'], 'nodestats[' + k + ']', ns.get(k)))
-    if b['nodeinfo']:
-        if not b['node']:
-            click.echo(click.style('Batch {0} is missing required parameter "node"'.format(name), fg='red', bold=True))
-            sys.exit(1)
-        ni = NodeInfo(ctx.obj['client'], b['node'])
-        for k in b['nodeinfo'].split(','):
-            metrics.append(Metric(b['host'], 'nodeinfo[' + k + ']', ni.get(k)))
+    zserver = b.pop('server')
+    zport = int(b.pop('port'))
+    zhost = b.pop('host')
+    # Should only be Item keys at this point.
+    logger.debug('Batch keys: {0}'.format(b))
+    # Separate keys into similar APIs
+    apis = { 'health': [], 'clusterstats': [], 'clusterstate': [],
+        'nodestats': [], 'nodeinfo': [],}
+    for k in b:
+        ztuple = parse_key(b[k])
+        apis[ztuple[0]].append(ztuple)
+    logger.debug('API-separated keys: {0}'.format(apis))
+    for api in apis:
+        apiobj = map_api(apis[api][0], ctx.obj['client'])
+        for ztuple in apis[api]:
+            # We do not have the key here, so we need to rebuild it.
+            metrics.append(Metric(zhost, ztuple[0] + '[' + ztuple[2] + ']', apiobj.get(ztuple[2], name=ztuple[1])))
 
-    # click.echo('Metrics: {0}'.format(metrics))
-    send_to_zabbix(metrics, b['server'], int(b['port']))
+    logger.debug('Metrics: {0}'.format(metrics))
+    send_to_zabbix(metrics, zserver, zport)
+    logger.info('Job completed.')
 
 def main():
     cli(obj={})

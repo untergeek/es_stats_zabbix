@@ -1,4 +1,5 @@
 import elasticsearch
+from es_stats import *
 import click
 import sys
 import logging
@@ -96,6 +97,7 @@ def get_client(**kwargs):
     kwargs['ssl_no_validate'] = False if not 'ssl_no_validate' in kwargs else kwargs['ssl_no_validate']
     kwargs['certificate'] = False if not 'certificate' in kwargs else kwargs['certificate']
     logger.debug("kwargs = {0}".format(kwargs))
+    logger.info('Initializing Elasticsearch client.')
     master_only = kwargs.pop('master_only')
     if kwargs['use_ssl']:
         if kwargs['ssl_no_validate']:
@@ -121,5 +123,38 @@ def get_client(**kwargs):
         check_master(client, master_only=master_only)
         return client
     except Exception as e:
+        logger.error('Connection failure. Exception: {0}'.format(e))
         click.echo(click.style('ERROR: Connection failure. Exception: {0}'.format(e), fg='red', bold=True))
         sys.exit(1)
+
+def parse_key(zabbixkey):
+    """Parse zabbix key into Tuple(api_type, node, key)"""
+    api_type = zabbixkey.split('[')[0]
+    # Take what's inside the brackets, removing the last char (])
+    bracketed = zabbixkey.split('[')[1][:-1]
+    # Check if there's a comma (for nodestats and nodeinfo)
+    if ',' in bracketed:
+        node = bracketed.split(',')[0]
+        key = bracketed.split(',')[1]
+    else:
+        node = None
+        key = bracketed
+    logger.debug('API: {0}  Node: {1}  Key: {2}'.format(api_type, node, key))
+    return (api_type, node, key)
+
+def map_api(ztuple, client):
+    """Return API object associated with api_type.  Requires ES client."""
+    if ztuple[0] == 'health':
+        return ClusterHealth(client)
+    if ztuple[0] == 'clusterstats':
+        return ClusterStats(client)
+    if ztuple[0] == 'clusterstate':
+        return ClusterState(client)
+    if ztuple[0] == 'nodestats':
+        return NodeStats(client)
+    if ztuple[0] == 'nodeinfo':
+        return NodeInfo(client)
+    # If we haven't returned yet, that's bad
+    logger.error('API type {0} not found. Exiting'.format(ztuple[0]))
+    click.echo(click.style('API type {0} not found. Exiting'.format(ztuple[0]), fg='red', bold=True))
+    sys.exit(1)

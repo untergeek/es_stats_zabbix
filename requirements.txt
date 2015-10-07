@@ -1,5 +1,5 @@
 elasticsearch>=1.6.0
-es_stats>=0.0.4
+es_stats>=0.1.0
 click>=3.3
 zbxsend>=0.1.6
 kaptan>=0.5.8
