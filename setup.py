@@ -26,6 +26,7 @@ def get_install_requires():
     res.append('es_stats>=0.0.4')
     res.append('click>=3.3')
     res.append('zbxsend>=0.1.6')
+    res.append('kaptan>=0.5.8')
     return res
 
 setup(
