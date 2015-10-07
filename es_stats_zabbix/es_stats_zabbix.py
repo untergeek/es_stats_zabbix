@@ -146,13 +146,18 @@ def batch(ctx, name):
         apis[ztuple[0]].append(ztuple)
     logger.debug('API-separated keys: {0}'.format(apis))
     for api in apis:
+        if not apis[api]:
+            continue
         apiobj = map_api(apis[api][0], ctx.obj['client'])
         for ztuple in apis[api]:
             # We do not have the key here, so we need to rebuild it.
             metrics.append(Metric(zhost, ztuple[0] + '[' + ztuple[2] + ']', apiobj.get(ztuple[2], name=ztuple[1])))
 
     logger.debug('Metrics: {0}'.format(metrics))
-    send_to_zabbix(metrics, zserver, zport)
+    result = send_to_zabbix(metrics, zserver, zport)
+    logger.debug('Result = {0}'.format(result))
+    # Spit out exit code to stdout
+    click.echo(0 if result else 1)
     logger.info('Job completed.')
 
 def main():

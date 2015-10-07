@@ -3,7 +3,20 @@
 Changelog
 =========
 
+0.1.1 (7 October 2015)
+----------------------
+
+**New**
+
+  * Batch now reports count of items which failed on command-line.  This enables
+    you to call batch as a Zabbix agent item, and report a result.
+
+**Bug Fixes**
+
+  * Prevent empty lists in batches from generating an error.
+
 0.1.0 (7 October 2015)
+----------------------
 
 **New**
 
