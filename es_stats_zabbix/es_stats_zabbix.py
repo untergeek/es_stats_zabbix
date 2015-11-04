@@ -116,7 +116,10 @@ def single(ctx, zabbixkey):
     apiobj = map_api(ztuple, ctx.obj['client'])
     result = apiobj.get(ztuple[2], name=ztuple[1])
     logger.debug('Result = {0}'.format(result))
-    click.echo(result)
+    if result == DotMap():
+        click.echo('ZBX_NOTSUPPORTED')
+    else:
+        click.echo(result)
     logger.info('Job completed.')
 
 @cli.command(short_help="Batch mode")
@@ -149,9 +152,12 @@ def batch(ctx, name):
         if not apis[api]:
             continue
         apiobj = map_api(apis[api][0], ctx.obj['client'])
+        result = apiobj.get(ztuple[2], name=ztuple[1])
+        if result == DotMap():
+            result = 'ZBX_NOTSUPPORTED'
         for ztuple in apis[api]:
             # We do not have the key here, so we need to rebuild it.
-            metrics.append(Metric(zhost, ztuple[0] + '[' + ztuple[2] + ']', apiobj.get(ztuple[2], name=ztuple[1])))
+            metrics.append(Metric(zhost, ztuple[0] + '[' + ztuple[2] + ']', result))
 
     logger.debug('Metrics: {0}'.format(metrics))
     result = send_to_zabbix(metrics, zserver, zport)
