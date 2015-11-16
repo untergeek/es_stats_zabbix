@@ -4,6 +4,7 @@ __pycache__/
 
 # Test config files
 es_stats_zabbix.ini
+test.ini
 
 # C extensions
 *.so
