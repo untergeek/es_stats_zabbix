@@ -149,13 +149,16 @@ def batch(ctx, name):
         apis[ztuple[0]].append(ztuple)
     logger.debug('API-separated keys: {0}'.format(apis))
     for api in apis:
+	# ignore empty list
         if not apis[api]:
             continue
+	# get the base api object
         apiobj = map_api(apis[api][0], ctx.obj['client'])
-        result = apiobj.get(ztuple[2], name=ztuple[1])
-        if result == DotMap():
-            result = 'ZBX_NOTSUPPORTED'
+	# iterate over each tuple 
         for ztuple in apis[api]:
+            result = apiobj.get(ztuple[2], name=ztuple[1])
+            if result == DotMap():
+                result = 'ZBX_NOTSUPPORTED'
             # We do not have the key here, so we need to rebuild it.
             metrics.append(Metric(zhost, ztuple[0] + '[' + ztuple[2] + ']', result))
 
