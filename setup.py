@@ -23,7 +23,7 @@ def get_version():
 
 def get_install_requires():
     res = ['elasticsearch>=1.6.0' ]
-    res.append('es_stats>=0.1.0')
+    res.append('es_stats>=0.2.1')
     res.append('click>=3.3')
     res.append('zbxsend>=0.1.6')
     res.append('kaptan>=0.5.8')
