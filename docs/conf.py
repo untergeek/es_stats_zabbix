@@ -18,7 +18,7 @@ def fread(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 def get_version():
-    VERSIONFILE="../curator/_version.py"
+    VERSIONFILE="../es_stats_zabbix/_version.py"
     verstrline = fread(VERSIONFILE).strip()
     vsre = r"^__version__ = ['\"]([^'\"]*)['\"]"
     mo = re.search(vsre, verstrline, re.M)
@@ -26,7 +26,7 @@ def get_version():
         VERSION = mo.group(1)
     else:
         raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
-    build_number = os.environ.get('CURATOR_BUILD_NUMBER', None)
+    build_number = os.environ.get('ESSTATSZABBIX_BUILD_NUMBER', None)
     if build_number:
         return VERSION + "b{}".format(build_number)
     return VERSION
@@ -61,8 +61,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Elasticsearch Curator'
-copyright = u'2011-2015, Elasticsearch'
+project = u'es_stats_zabbix'
+copyright = u'2015-2016, Aaron Mildenstein'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

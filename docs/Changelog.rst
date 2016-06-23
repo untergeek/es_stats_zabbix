@@ -3,6 +3,18 @@
 Changelog
 =========
 
+0.1.2 (22 June 2016)
+--------------------
+
+**Bug Fixes**
+
+  * Fix ``es_stats`` dependency to be 0.2.1, which fixes some reported bugs.
+
+**General**
+
+  * Fix docs in their as yet incomplete state to at least not have incorrect
+    information
+
 0.1.1 (7 October 2015)
 ----------------------
 
