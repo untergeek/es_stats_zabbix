@@ -1,3 +1,1 @@
-from ._version import __version__
-from .utils import *
-from .es_stats_zabbix import *
+from es_stats_zabbix.version import __version__

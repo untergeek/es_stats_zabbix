@@ -18,7 +18,7 @@ def fread(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 def get_version():
-    VERSIONFILE="../es_stats_zabbix/_version.py"
+    VERSIONFILE="../es_stats_zabbix/version.py"
     verstrline = fread(VERSIONFILE).strip()
     vsre = r"^__version__ = ['\"]([^'\"]*)['\"]"
     mo = re.search(vsre, verstrline, re.M)

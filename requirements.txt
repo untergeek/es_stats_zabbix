@@ -1,5 +1,5 @@
-elasticsearch>=1.6.0
-es_stats>=0.2.1
-click>=3.3
-zbxsend>=0.1.6
-kaptan>=0.5.8
+es_client>=1.1.1
+es_stats>=1.1.2
+click>=6.7
+pyyaml>=3.12
+flask_restful

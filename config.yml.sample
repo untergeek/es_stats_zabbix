@@ -1,0 +1,78 @@
+---
+elasticsearch:
+  master_only: false
+  client:
+    hosts: 
+      - 127.0.0.1
+    port: 9200
+    url_prefix:
+    timeout: 30
+    username:
+    password:
+    verify_certs: true
+    use_ssl: false
+    ca_certs:
+    client_cert:
+    client_key:
+  aws:
+    sign_requests: false
+    aws_region: us_east
+
+logging:
+  loglevel: INFO
+  logfile: /path/to/logfile
+  logformat: default
+  blacklist: ['elasticsearch', 'urllib3']
+
+backend:
+  apihost: 127.0.0.1
+  apiport: 7600
+  apidebug: false
+  cache_timeout: 60
+
+do_not_discover:
+  health: 
+    - status # This is monitored directly (not discovered), as it has a special value map
+  clusterstats:
+    - cluster_name
+    - timestamp
+    - status
+    - nodes.network_types.transport_types.netty4
+    - nodes.network_types.http_types.netty4
+    - indices.segments.max_unsafe_auto_id_timestamp
+  nodeinfo:
+    - transport_address
+    - host
+    - ip
+    - build_hash
+    - settings.cluster.name
+    - jvm.start_time_in_millis
+    - transport.publish_address
+    - http.publish_address
+    - http.max_content_length_in_bytes
+  nodestats:
+    - timestamp
+    - name
+    - transport_address
+    - host
+    - ip
+    - fs.total.total_in_bytes
+    - fs.total.free_in_bytes
+    - fs.total.available_in_bytes
+    - transport.server_open
+    - transport.rx_count
+    - transport.rx_size_in_bytes
+    - transport.tx_count
+    - transport.tx_size_in_bytes
+    - http.current_open
+    - http.total_opened
+    - fs.timestamp
+    - jvm.classes.current_loaded_count
+    - jvm.classes.total_loaded_count
+    - jvm.classes.total_unloaded_count
+    - jvm.timestamp
+    - process.timestamp
+    - indices.segments.max_unsafe_auto_id_timestamp
+    - discovery.cluster_state_queue.total
+    - discovery.cluster_state_queue.pending
+    - discovery.cluster_state_queue.committed
