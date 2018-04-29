@@ -61,51 +61,38 @@ def get_dnd(cfg):
     return check_schema(cfg, 'do_not_discover')['do_not_discover']
 
 def config_override(ctx):
-    if ctx.params['config'] is not None:
-        config_dict = get_yaml(ctx.params['config'])
+    params = prune_nones(ctx.params)
+    if 'config' in params:
+        config_dict = get_yaml(params['config'])
     else:
         config_dict = {'elasticsearch':{}, 'logging':{}, 'backend':{}, 'do_not_discover': {'health': ['status']}}
     for toplevel in TOP_LEVEL:
         if toplevel == 'elasticsearch':
             for k in ELASTICSEARCH_KEYS:
                 if k == 'master_only':
-                    if k in ctx.params:
-                        config_dict[toplevel][k] = ctx.params[k]
+                    if k in params:
+                            config_dict[toplevel][k] = params[k]
                 else:
                     if not k in config_dict[toplevel]:
                         config_dict[toplevel][k] = {}
                     for subk in CLIENT_KEYS:
-                        if subk in ctx.params:
+                        if subk in params:
                             # We can supply multiple hosts on the command line, but they come as a tuple
                             if subk == 'host':
-                                config_dict[toplevel][k]['hosts'] = list(ctx.params[subk])
+                                if params[subk]: # This "None" doesn't get pruned, it's an empty tuple
+                                    config_dict[toplevel][k]['hosts'] = list(params[subk])
                             else:
-                                config_dict[toplevel][k][subk] = ctx.params[subk]
+                                config_dict[toplevel][k][subk] = params[subk]
         if toplevel == 'logging':
             for k in LOGGING_KEYS:
-                if k in ctx.params:
-                    config_dict[toplevel][k] = ctx.params[k]
+                if k in params:
+                        config_dict[toplevel][k] = params[k]
         if toplevel == 'backend':
             for k in BACKEND_KEYS:
-                if k in ctx.params:
+                if k in params:
                     if k[:3] == 'api':
                         renamed = k[3:] # Remove 'api' from 'apihost', 'apiport', and 'apidebug'
-                        config_dict[toplevel][renamed] = ctx.params[k]
+                        config_dict[toplevel][renamed] = params[k]
                     else: # Cover cache_timeout this way
-                        config_dict[toplevel][k] = ctx.params[k]
+                        config_dict[toplevel][k] = params[k]
     return config_dict
-
-def host_callback(ctx, param, value):
-    if value[0] == '1':
-        return ('127.0.0.1',)
-    else:
-        return value
-    
-def keys_callback(ctx, param, value):
-    if value is None:
-        return None
-    elif value in apis():
-        return value
-    else:
-        print('Must be one of "{0}"'.format(' ,'.join(apis)))
-        ctx.abort()

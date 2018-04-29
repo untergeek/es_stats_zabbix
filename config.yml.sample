@@ -20,9 +20,9 @@ elasticsearch:
 
 logging:
   loglevel: INFO
-  logfile: /path/to/logfile
+  logfile: 
   logformat: default
-  blacklist: ['elasticsearch', 'urllib3']
+  blacklist: ['elasticsearch', 'urllib3', 'werkzeug']
 
 backend:
   apihost: 127.0.0.1

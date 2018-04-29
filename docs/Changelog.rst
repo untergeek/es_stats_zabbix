@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.0 (? ? ?)
+0.9.1 (? ? ?)
 -------------
 
 **Alpha-release of pending 1.0 version**
@@ -40,6 +40,10 @@ Changelog
     allows Zabbix to automatically discover items for the correct item type.
   * Block individual endpoints from LLD by enumerating them in the
     ``do_not_discover`` block in the configuration file.
+
+**Interim Fix List**
+
+  * Fixed issues with the config_override function not behaving as expected.
 
 0.1.4 (22 June 2016)
 --------------------
