@@ -35,13 +35,13 @@ def apis():
     """
     return APIS
 
-def config_file():
+def config_file(testpath=[]):
     """
     Default Config file location
     
     Return the first file that matches from constant FILEPATHS, otherwise None
     """
-    for file in FILEPATHS:
+    for file in FILEPATHS + testpath:
         if path.isfile(file) and access(file, R_OK):
             return file
     return None # If no files in filepaths are present, then return None

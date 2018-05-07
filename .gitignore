@@ -1,5 +1,7 @@
 # My files for testing
 test.yml
+.vscode/
+cover/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

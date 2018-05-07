@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.1 (? ? ?)
+0.9.2 (? ? ?)
 -------------
 
 **Alpha-release of pending 1.0 version**
@@ -11,9 +11,7 @@ Changelog
   * Basically a complete rewrite.  This version is not yet ready for mass
     consumption.  Still pending are:
     - Zabbix templates
-    - Tests
     - Installation scripts/config files
-    - Endpoints
     - Init scripts for the backend (SysV, Upstart, systemd)
     - Documentation
     - Compatibility testing with different versions of Elasticsearch and
@@ -44,6 +42,11 @@ Changelog
 **Interim Fix List**
 
   * Fixed issues with the config_override function not behaving as expected.
+  * Pruned unnecessary code.
+  * Added unit and integration tests.
+  * Added endpoints
+  * Switched to using ``setup.cfg`` instead of everything in ``setup.py``
+  * Add some backward compatibility.
 
 0.1.4 (22 June 2016)
 --------------------
