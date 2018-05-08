@@ -1,6 +1,7 @@
 ---
 elasticsearch:
   master_only: false
+  skip_version_test: false
   client:
     hosts: 
       - 127.0.0.1
@@ -9,11 +10,14 @@ elasticsearch:
     timeout: 30
     username:
     password:
-    verify_certs: true
+    verify_certs: false
     use_ssl: false
     ca_certs:
     client_cert:
     client_key:
+    ssl_version:
+    ssl_assert_hostname:
+    http_compress: true
   aws:
     sign_requests: false
     aws_region: us_east
