@@ -4,10 +4,13 @@ include LICENSE
 include README.rst
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]
-recursive-include test *
+recursive-include es_stats_zabbix *
+recursive-exclude es_stats_zabbix *.pyc
+recursive-exclude es_stats_zabbix *.pyo
+recursive-include tests *
 recursive-include docs *
 recursive-exclude docs *.pyc
 recursive-exclude docs *.pyo
-recursive-exclude test *.pyc
-recursive-exclude test *.pyo
+recursive-exclude tests *.pyc
+recursive-exclude tests *.pyo
 prune docs/_build
