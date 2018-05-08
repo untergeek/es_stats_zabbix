@@ -33,9 +33,9 @@ def cli(ctx, host, port, debug, api, valuetype):
         m = "'{0}' is not a valid API: {1}".format(api, apis())
         log_to_listener(host, port, 'critical', m)
         exit(1)
-    url = 'http://{0}:{1}/api/discovery/{2}'.format(host, port, api)
+    uri = '/api/discovery/{0}'.format(api)
     if debug:
-        log_to_listener(host, port, 'debug', {'url':url})
+        log_to_listener(host, port, 'debug', {'host':host, 'port':port, 'uri':uri})
 
     fail = 'ZBX_NOTSUPPORTED'
     if valuetype != 'all':
@@ -46,7 +46,7 @@ def cli(ctx, host, port, debug, api, valuetype):
         body = None
 
     try:        
-        result = do_request(host, port, url, method, body=body)
+        result = do_request(host, port, uri, method, body=body)
         msgs = {
             'result': str(result),
             'size_in_bytes': len(str(result).encode('utf-8'))

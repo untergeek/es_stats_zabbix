@@ -26,16 +26,11 @@ class RequestLogger(Resource):
     def post(self, loglevel):
         # self.logger.debug('request.data contents = {}'.format(request.data))
         if request.data != b'':
-            try:
-                json_data = json.loads(request.data)
-            except json.decoder.JSONDecodeError:
-                self.logger.error('Unable to parse JSON: {0}'.format(request.data))
-            try:
-                # If multiple keys were posted, log them all as specified
-                for k in json_data:
-                    self.keymap[loglevel.upper()]('{0}: {1}'.format(k, json_data[k]))
-            except:
-                self.logger.error('Unable to share message')
+            # Must decode to 'utf-8' for older versions of Python
+            json_data = json.loads(request.data.decode('utf-8'))
+            # If multiple keys were posted, log them all as specified
+            for k in json_data:
+                self.keymap[loglevel.upper()]('{0}: {1}'.format(k, json_data[k]))
         else:
             self.keymap[loglevel.upper()]('Received no POST data')
 
@@ -52,19 +47,18 @@ class Discovery(Resource):
         self.logger.debug('request.data contents = {}'.format(request.data))
         valuetype = None
         if request.data != b'':
-            try:
-                json_data = json.loads(request.data)
-            except json.decoder.JSONDecodeError:
-                return 'unable to decode JSON', 400    
+            # Must decode to 'utf-8' for older versions of Python
+            json_data = json.loads(request.data.decode('utf-8'))  
             valuetype = json_data['valuetype'] if 'valuetype' in json_data else None
         self.logger.debug('valuetype = {0} -- api = {1}'.format(valuetype, api))
         endpoints = get_endpoints(self.client, api, valuetype=valuetype)
         macros = []
         macroname = '{#' + valuetype.upper() + '}' if valuetype else '{#ENDPOINT}'
-        for ep in endpoints[api]:
-            if api in self.dnd and ep in self.dnd[api]:
-                continue
-            macros.append({macroname: ep})
+        if api in endpoints:
+            for ep in endpoints[api]:
+                if api in self.dnd and ep in self.dnd[api]:
+                    continue
+                macros.append({macroname: ep})
         return { 'data': macros }
 
 
@@ -82,17 +76,11 @@ class Stat(Resource):
         self.logger.debug('request.data contents = {}'.format(request.data))
         node = None
         if request.data != b'':
-            try:
-                json_data = json.loads(request.data)
-            except json.decoder.JSONDecodeError:
-                return 'unable to decode JSON', 400
+            # Must decode to 'utf-8' for older versions of Python
+            json_data = json.loads(request.data.decode('utf-8'))
             node = json_data['node'] if 'node' in json_data else None
         self.logger.debug('Node = {0} -- key = {1}'.format(node, key))
-        try:
-            result = self.statobj.get(key, name=node)
-        except NotFound as e:
-            r = {'message':'{0}'.format(e)}
-            return r, 404
+        result = self.statobj.get(key, name=node)
         # Remap for `status`
         if key == 'status': 
             result = status_map(result)

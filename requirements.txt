@@ -1,5 +1,4 @@
 es_client>=1.1.1
 es_stats>=1.1.2
 click>=6.7
-pyyaml>=3.12
-flask_restful
+flask_restful>=0.3.6

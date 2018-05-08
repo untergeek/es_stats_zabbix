@@ -38,9 +38,10 @@ def cli(ctx, host, port, debug, node, api, endpoint):
         m = "'{0}' is not a valid API: {1}".format(api, apis())
         log_to_listener(host, port, 'critical', m)
         exit(1)
-    url = 'http://{0}:{1}/api/{2}/{3}'.format(host, port, api, endpoint)
+
+    uri = '/api/{0}/{1}'.format(api, endpoint)
     if debug:
-        log_to_listener(host, port, 'debug', {'url':url})
+        log_to_listener(host, port, 'debug', {'host':host, 'port':port, 'uri':uri})
     fail = 'ZBX_NOTSUPPORTED'
     if node is not None:
         body = {'node': node}
@@ -50,16 +51,7 @@ def cli(ctx, host, port, debug, node, api, endpoint):
         body = None
 
     try:
-        print(do_request(host, port, url, method, body=body).strip())
-    except EmptyResult:
-        log_to_listener(host, port, 'error', {'error':'No value return value'})
-        exit(1)
-    except ValueError:
-        log_to_listener(host, port, 'error', {'error':'No value provided for "body"'})
-        exit(1)
-    except NotFound:
-        log_to_listener(host, port, 'error', {'error':'A non-200 HTTP response code was received.'})
-        print(fail)
+        print(do_request(host, port, uri, method, body=body).strip())
     except FailedExecution:
         log_to_listener(host, port, 'error', {'error':'The request was unable to successfully complete.'})
         print(fail)

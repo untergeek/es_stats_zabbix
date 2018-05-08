@@ -21,11 +21,15 @@ def open_port(host, port):
     except:
         return False
 
-def do_request(host, port, url, method, body=None):
+def do_request(host, port, uri, method, body=None):
+    # Since we're manually separating with a /, prune if it exists.
+    uri = uri[1:] if uri[0] == '/' else uri
+    url = 'http://{0}:{1}/{2}'.format(host, port, uri)
     try:
         if method == 'get':
             r = requests.get(url)
         elif body is not None:
+            logger.debug('POST: url={0}, body={1}'.format(url, body))
             r = requests.post(url, json=body)
         else:
             raise ValueError('No value provided for "body"')
@@ -40,7 +44,7 @@ def do_request(host, port, url, method, body=None):
             log_to_listener(host, port, 'error', msgs)
             raise NotFound('A non-200 HTTP response code was received.')
         else:
-            # We're good! Print the value minus newlines and trailing spaces
+            # We're good!
             return r.text
     except:
         # Something else is amiss with our api/endpoint/node

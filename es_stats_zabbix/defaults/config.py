@@ -1,5 +1,4 @@
 from six import string_types
-# from socket import getfqdn
 from voluptuous import All, Any, Boolean, Coerce, Optional, Range, Schema
 
 # pylint: disable=no-value-for-parameter
