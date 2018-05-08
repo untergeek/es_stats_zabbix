@@ -4,7 +4,7 @@ APIS = ['health', 'clusterstate', 'clusterstats', 'nodeinfo', 'nodestats']
 
 FILEPATHS = [
     path.join(path.expanduser('~'), '.es_stats_zabbix', 'config.yml'),
-    path.join('etc', 'es_stats_zabbix', 'config.yml'),
+    path.join('/', 'etc', 'es_stats_zabbix', 'config.yml'),
 ]
 
 SKIP_THESE = [
@@ -23,6 +23,8 @@ SKIP_THESE = [
 
 DATATYPES = {
     'bool': bool,
+    'bytes': int,
+    'millis': int,
     'text': str,
     'unsigned': int,
     'float': float,

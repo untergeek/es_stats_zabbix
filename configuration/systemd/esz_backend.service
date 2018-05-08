@@ -1,0 +1,15 @@
+[Unit]
+Description=es_stats_zabbix Backend Daemon
+After=network.target auditd.service
+
+[Service]
+EnvironmentFile=-/etc/default/esz_backend
+ExecStart=/usr/bin/esz_backend
+KillMode=process
+Restart=always
+RestartSec=10
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
+Alias=esz_backend.service

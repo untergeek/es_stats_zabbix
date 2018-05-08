@@ -58,9 +58,23 @@ class Discovery(Resource):
             for ep in endpoints[api]:
                 if api in self.dnd and ep in self.dnd[api]:
                     continue
-                macros.append({macroname: ep})
+
+                else:
+                    macros.append({macroname: ep})
         return { 'data': macros }
 
+class NodesDiscovery(Resource):
+    def __init__(self, client):
+        self.client = client
+        self.logger = logging.getLogger('es_stats_zabbix.NodesDiscovery')
+
+    def get(self):
+        # We're only getting here.
+        nodeinfo = self.client.nodes.info()['nodes']
+        macros = []
+        for node in nodeinfo:
+            macros.append({ '{#NODEID}':node, '{#NODENAME}':nodeinfo[node]['name'] })
+        return { 'data': macros }
 
 class Stat(Resource):
     def __init__(self, statobj):
@@ -123,6 +137,8 @@ def run(config_dict):
         resource_class_kwargs={'statobj': NodeStats(client, cache_timeout=ct)})
     api.add_resource(Discovery, '/api/discovery/<api>', endpoint='/discovery/',
         resource_class_kwargs={'client': client, 'do_not_discover': dnd})
+    api.add_resource(NodesDiscovery, '/api/nodesdiscovery/', endpoint='/nodesdiscovery/',
+        resource_class_kwargs={'client': client})
     api.add_resource(RequestLogger, '/api/logger/<loglevel>', endpoint='/logger/')
     app.run(host=backend['host'], port=backend['port'], debug=backend['debug'], threaded=True)
     

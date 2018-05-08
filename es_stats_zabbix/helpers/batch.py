@@ -87,6 +87,15 @@ def get_endpoints(client, api, valuetype=None):
         if value == DotMap():
             # This is essential to not returning invalid endpoints
             continue
+        vtl = len(valuetype)
+        if valuetype in ['bytes', 'millis', 'percent']:
+            if line[-vtl:] == valuetype:
+                all_lines.append(line)
+        elif valuetype == 'unsigned': # Only append these if they're not those valuetype endings
+            if line[-5:] != 'bytes' and \
+               line[-6:] != 'millis' and \
+               line[-7:] != 'percent':
+                all_lines.append(line)
         else:
             all_lines.append(line)
     if all_lines:
