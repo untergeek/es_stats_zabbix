@@ -23,6 +23,8 @@ SKIP_THESE = [
 
 DATATYPES = {
     'bool': bool,
+    'bytes': int,
+    'millis': int,
     'text': str,
     'unsigned': int,
     'float': float,

@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.3 (? ? ?)
+0.9.4 (? ? ?)
 -------------
 
 **Alpha-release of pending 1.0 version**
@@ -12,7 +12,7 @@ Changelog
     consumption.  Still pending are:
     - Zabbix 3.x template for 5.x and 6.x ES versions.
     - Installation scripts/config files
-    - Init scripts for the backend (SysV, Upstart, systemd)
+    - Init scripts for the backend (SysV, Upstart)
     - Documentation
     - Make different templates for different Zabbix versions, if necessary.
   * Testing this pre-release version requires a ``git clone`` and
@@ -48,6 +48,8 @@ Changelog
   * Add some backward compatibility.
   * Compatibility testing with different versions of Elasticsearch (all 5.x and
     6.x minor releases) and Python client versions (2.7, 3.5, 3.6)
+  * Add ``esz_nodes_discovery`` for node name and id macros for discovery.
+  * Add systemd service file.
 
 0.1.4 (22 June 2016)
 --------------------
