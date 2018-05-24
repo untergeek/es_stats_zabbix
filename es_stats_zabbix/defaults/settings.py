@@ -2,7 +2,7 @@ from os import access, path, R_OK
 
 APIS = ['health', 'clusterstate', 'clusterstats', 'nodeinfo', 'nodestats']
 
-NODETYPES = ['master', 'data', 'ml', 'ingest', 'coordinating']
+NODETYPES = ['master', 'data', 'ml', 'ingest']
 
 FILEPATHS = [
     path.join(path.expanduser('~'), '.es_stats_zabbix', 'config.yml'),

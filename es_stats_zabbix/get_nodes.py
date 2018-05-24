@@ -1,6 +1,5 @@
 import click
 from es_stats_zabbix import __version__
-from es_stats_zabbix.defaults.settings import apis, NODETYPES
 from es_stats_zabbix.exceptions import FailedExecution, NotFound
 from es_stats_zabbix.helpers.utils import do_request, log_to_listener, open_port
 from sys import exit
@@ -31,10 +30,7 @@ def cli(ctx, host, port, debug, nodename, nodetype):
     if not open_port(host, port):
         exit(1)
 
-    # Establish a default nodetype
-    nodetype = nodetype if nodetype else 'coordinating'
-    if not nodetype in NODETYPES:
-        exit(1)
+    nodetype = 'any' if not nodetype else nodetype
 
     # Now try to get the value
     uri = '/api/nodediscovery/'
