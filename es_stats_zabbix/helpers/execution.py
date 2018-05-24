@@ -66,15 +66,19 @@ class Discovery(Resource):
 
 class NodeDiscovery(Resource):
     def __init__(self, client):
-        self.client = client
         self.logger = logging.getLogger('es_stats_zabbix.NodeDiscovery')
         self.nodeinfo = client.nodes.info()['nodes']
+        self.cluster_name = client.cluster.health()['cluster_name']
 
     def get(self):
-        # We're only getting here.
+        # We're only GETting here.
         macros = []
         for node in self.nodeinfo:
-            entries = { '{#NODEID}':node, '{#NODENAME}':self.nodeinfo[node]['name'] }
+            entries = {
+                '{#CLUSTERNAME}': self.cluster_name,
+                '{#NODEID}':node,
+                '{#NODENAME}':self.nodeinfo[node]['name']
+            }
             def zbool(v):
                 return 1 if str(v).lower() == 'true' else 0
             settings = self.nodeinfo[node]['settings']['node']

@@ -10,14 +10,14 @@ from sys import exit
 @click.option('--port', help='es_stats_zabbix backend listener Port',
     default=7600, show_default=True)
 @click.option('--debug', is_flag=True, help='Log all transactions in listener')
+@click.option('--flag', help='Pass arbitrary value to differentiate calls')
 @click.version_option(version=__version__)
 @click.pass_context
-def cli(ctx, host, port, debug, nodename, nodetype):
+def cli(ctx, host, port, debug, flag):
     """
     Connect to the backend at --host and --port.
 
-    If --nodename is not specified, return the discovered json object with the
-    node discovery macros for each node.
+    --flag is used to make an arbitrary number of zabbix keys available.
 
     Perform --debug logging upstream to the backend if specified
     """
