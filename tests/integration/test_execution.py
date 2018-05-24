@@ -1,6 +1,7 @@
 import click
 import json
 from . import FlaskUnitTest
+import logging
 
 class TestGetStat(FlaskUnitTest):
     def test_get(self):
@@ -45,6 +46,22 @@ class TestGetDiscovery(FlaskUnitTest):
             result = c.get('/api/discovery/health')
             data = json.loads(result.data.decode('utf-8'))['data']
             self.assertFalse({"{#ENDPOINT}":"status"} in data)
+
+####
+#### WEIRDNESS ALERT
+####
+# result = c.get('/api/nodediscovery/')
+# This line gives a 404, though it works manually.  I cannot explain it.
+# As a result, this test is incomplete, and commented out.
+# class TestNodeDiscovery(FlaskUnitTest):
+#     def test_get_all(self):
+#         with self.app.test_client() as c:
+#             nodename = c.get('/api/nodestats/name').data.decode('utf-8').strip().strip('"')
+#         with self.app.test_client() as c:
+#             result = c.get('/api/nodediscovery/')
+#             # data = json.loads(result.data.decode('utf-8'))['data']
+#             # self.assertEqual(data[0], {"{#NODEID}":"cluster_name", "{#NODENAME":nodename})
+#             self.assertEqual(200, result.status_code)
 
 class TestRequestLogger(FlaskUnitTest):
     def test_post(self):

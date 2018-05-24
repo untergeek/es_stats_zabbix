@@ -2,6 +2,8 @@ from os import access, path, R_OK
 
 APIS = ['health', 'clusterstate', 'clusterstats', 'nodeinfo', 'nodestats']
 
+NODETYPES = ['master', 'data', 'ml', 'ingest', 'coordinating']
+
 FILEPATHS = [
     path.join(path.expanduser('~'), '.es_stats_zabbix', 'config.yml'),
     path.join('/', 'etc', 'es_stats_zabbix', 'config.yml'),
@@ -25,10 +27,11 @@ DATATYPES = {
     'bool': bool,
     'bytes': int,
     'millis': int,
-    'text': str,
+    'percent': int,
     'unsigned': int,
-    'float': float,
     'character': str,
+    'text': str,
+    'float': float,
 }
 
 def apis():
