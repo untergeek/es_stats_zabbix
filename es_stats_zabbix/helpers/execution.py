@@ -63,18 +63,50 @@ class Discovery(Resource):
                     macros.append({macroname: ep})
         return { 'data': macros }
 
-class NodesDiscovery(Resource):
+class NodeDiscovery(Resource):
     def __init__(self, client):
         self.client = client
-        self.logger = logging.getLogger('es_stats_zabbix.NodesDiscovery')
+        self.logger = logging.getLogger('es_stats_zabbix.NodeDiscovery')
+        self.nodeinfo = client.nodes.info()['nodes']
 
     def get(self):
         # We're only getting here.
-        nodeinfo = self.client.nodes.info()['nodes']
         macros = []
-        for node in nodeinfo:
-            macros.append({ '{#NODEID}':node, '{#NODENAME}':nodeinfo[node]['name'] })
+        for node in self.nodeinfo:
+            macros.append({ '{#NODEID}':node, '{#NODENAME}':self.nodeinfo[node]['name'] })
         return { 'data': macros }
+
+    def post(self):
+        self.logger.debug('request.data contents = {}'.format(request.data))
+        node = None
+        if request.data != b'':
+            # Must decode to 'utf-8' for older versions of Python
+            json_data = json.loads(request.data.decode('utf-8'))
+            node = json_data['node'] if 'node' in json_data else None
+            nodetype = json_data['nodetype'] if 'nodetype' in json_data else None
+        fail = ({'message':'ZBX_NOTFOUND'}, 404)
+        if node is None:
+            return fail
+        def zbool(v):
+            return 1 if str(v).lower() == 'true' else 0
+        for nodeid in self.nodeinfo:
+            if self.nodeinfo[nodeid]['name'] == node:
+                settings = self.nodeinfo[nodeid]['settings']['node']
+                # coordinating nodes have both master and data as 'false'
+                if nodetype == 'coordinating':
+                    master = settings['master'] if 'master' in settings else True
+                    data = settings['data'] if 'data' in settings else True
+                    if zbool(master) == 0 and zbool(data) == 0:
+                        # if both master and data are false...
+                        value = 1
+                    else:
+                        value = 0
+                else:
+                    settings[nodetype] = True if not nodetype in settings else settings[nodetype]
+                    value = zbool(settings[nodetype])
+                return {'data':[{'{#' + nodetype.upper() + '}':value}]}
+        return fail
+
 
 class Stat(Resource):
     def __init__(self, statobj):
@@ -137,7 +169,7 @@ def run(config_dict):
         resource_class_kwargs={'statobj': NodeStats(client, cache_timeout=ct)})
     api.add_resource(Discovery, '/api/discovery/<api>', endpoint='/discovery/',
         resource_class_kwargs={'client': client, 'do_not_discover': dnd})
-    api.add_resource(NodesDiscovery, '/api/nodesdiscovery/', endpoint='/nodesdiscovery/',
+    api.add_resource(NodeDiscovery, '/api/nodediscovery/', endpoint='/nodediscovery/',
         resource_class_kwargs={'client': client})
     api.add_resource(RequestLogger, '/api/logger/<loglevel>', endpoint='/logger/')
     app.run(host=backend['host'], port=backend['port'], debug=backend['debug'], threaded=True)
