@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.5 (? ? ?)
+0.9.6 (? ? ?)
 -------------
 
 **Alpha-release of pending 1.0 version**
@@ -50,7 +50,7 @@ Changelog
     6.x minor releases) and Python client versions (2.7, 3.5, 3.6)
   * Add ``esz_nodes_discovery`` for node name and id macros for discovery.
   * Add systemd service file.
-  * Add individual node type (master, ml, data) to ``esz_nodes_discovery``
+  * Add node type discovery (master, ml, data) to ``esz_nodes_discovery``
 
 0.1.4 (22 June 2016)
 --------------------

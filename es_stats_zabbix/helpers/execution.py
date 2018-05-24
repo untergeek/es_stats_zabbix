@@ -4,6 +4,7 @@ from dotmap import DotMap
 from es_stats.classes import ClusterHealth, ClusterState, ClusterStats, NodeInfo, NodeStats
 from es_stats.exceptions import NotFound
 from es_stats_zabbix.exceptions import EmptyResult, ConfigurationError
+from es_stats_zabbix.defaults.settings import NODETYPES
 from es_stats_zabbix.helpers.config import configure_logging, get_backend, get_client, get_dnd
 from es_stats_zabbix.helpers.batch import get_endpoints
 from es_stats_zabbix.helpers.utils import status_map
@@ -83,7 +84,8 @@ class NodeDiscovery(Resource):
             # Must decode to 'utf-8' for older versions of Python
             json_data = json.loads(request.data.decode('utf-8'))
             node = json_data['node'] if 'node' in json_data else None
-            nodetype = json_data['nodetype'] if 'nodetype' in json_data else None
+            # nodetype = json_data['nodetype'] if 'nodetype' in json_data else None
+            # Ignoring nodetype here, because we're just using it to differentiate
         fail = ({'message':'ZBX_NOTFOUND'}, 404)
         if node is None:
             return fail
@@ -92,19 +94,22 @@ class NodeDiscovery(Resource):
         for nodeid in self.nodeinfo:
             if self.nodeinfo[nodeid]['name'] == node:
                 settings = self.nodeinfo[nodeid]['settings']['node']
-                # coordinating nodes have both master and data as 'false'
-                if nodetype == 'coordinating':
-                    master = settings['master'] if 'master' in settings else True
-                    data = settings['data'] if 'data' in settings else True
-                    if zbool(master) == 0 and zbool(data) == 0:
-                        # if both master and data are false...
-                        value = 1
+                macros = []
+                for nodetype in NODETYPES:
+                    # coordinating nodes have both master and data as 'false'
+                    if nodetype == 'coordinating':
+                        master = settings['master'] if 'master' in settings else True
+                        data = settings['data'] if 'data' in settings else True
+                        if zbool(master) == 0 and zbool(data) == 0:
+                            # if both master and data are false...
+                            value = 1
+                        else:
+                            value = 0   
                     else:
-                        value = 0
-                else:
-                    settings[nodetype] = True if not nodetype in settings else settings[nodetype]
-                    value = zbool(settings[nodetype])
-                return {'data':[{'{#' + nodetype.upper() + '}':value}]}
+                        settings[nodetype] = True if not nodetype in settings else settings[nodetype]
+                        value = zbool(settings[nodetype])
+                    macros.append({'{#' + nodetype + '}':value})
+                return {'data':macros}
         return fail
 
 
