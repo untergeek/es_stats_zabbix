@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.8 (? ? ?)
+0.9.9 (? ? ?)
 -------------
 
 **Alpha-release of pending 1.0 version**
@@ -48,9 +48,8 @@ Changelog
   * Add some backward compatibility.
   * Compatibility testing with different versions of Elasticsearch (all 5.x and
     6.x minor releases) and Python client versions (2.7, 3.5, 3.6)
-  * Add ``esz_nodes_discovery`` for node name and id macros for discovery.
+  * Add ``esz_nodes_discovery`` for node related macros for discovery.
   * Add systemd service file.
-  * Add node type discovery (master, ml, data) to ``esz_nodes_discovery``
 
 0.1.4 (22 June 2016)
 --------------------

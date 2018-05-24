@@ -74,34 +74,16 @@ class NodeDiscovery(Resource):
         # We're only getting here.
         macros = []
         for node in self.nodeinfo:
-            macros.append({ '{#NODEID}':node, '{#NODENAME}':self.nodeinfo[node]['name'] })
-        return { 'data': macros }
-
-    def post(self):
-        self.logger.debug('request.data contents = {}'.format(request.data))
-        node = None
-        if request.data != b'':
-            # Must decode to 'utf-8' for older versions of Python
-            json_data = json.loads(request.data.decode('utf-8'))
-            node = json_data['node'] if 'node' in json_data else None
-            # nodetype = json_data['nodetype'] if 'nodetype' in json_data else None
-            # Ignoring nodetype here, because we're just using it to differentiate
-        fail = ({'message':'ZBX_NOTFOUND'}, 404)
-        if node is None:
-            return fail
-        def zbool(v):
-            return 1 if str(v).lower() == 'true' else 0
-        for nodeid in self.nodeinfo:
-            if self.nodeinfo[nodeid]['name'] == node:
-                settings = self.nodeinfo[nodeid]['settings']['node']
-                macros = []
-                for nodetype in NODETYPES:
+            entries = { '{#NODEID}':node, '{#NODENAME}':self.nodeinfo[node]['name'] }
+            def zbool(v):
+                return 1 if str(v).lower() == 'true' else 0
+            settings = self.nodeinfo[node]['settings']['node']
+            for nodetype in NODETYPES:
                     settings[nodetype] = True if not nodetype in settings else settings[nodetype]
                     value = zbool(settings[nodetype])
-                    macros.append({'{#' + nodetype + '}':value})
-                return {'data':macros}
-        return fail
-
+                    entries['{#' + nodetype + '}'] = value
+            macros.append(entries)
+        return { 'data': macros }
 
 class Stat(Resource):
     def __init__(self, statobj):
