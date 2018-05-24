@@ -96,15 +96,9 @@ class NodeDiscovery(Resource):
                 settings = self.nodeinfo[nodeid]['settings']['node']
                 macros = []
                 for nodetype in NODETYPES:
-                    # coordinating nodes have both master and data as 'false'
                     if nodetype == 'coordinating':
-                        master = settings['master'] if 'master' in settings else True
-                        data = settings['data'] if 'data' in settings else True
-                        if zbool(master) == 0 and zbool(data) == 0:
-                            # if both master and data are false...
-                            value = 1
-                        else:
-                            value = 0   
+                        # Ignore this type, we'll process the other booleans in Zabbix
+                        continue 
                     else:
                         settings[nodetype] = True if not nodetype in settings else settings[nodetype]
                         value = zbool(settings[nodetype])

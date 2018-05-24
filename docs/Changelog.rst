@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.6 (? ? ?)
+0.9.7 (? ? ?)
 -------------
 
 **Alpha-release of pending 1.0 version**
