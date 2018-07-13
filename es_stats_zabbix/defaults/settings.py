@@ -1,8 +1,12 @@
+"""
+Define settings and constants
+"""
+
 from os import access, path, R_OK
 
 APIS = ['health', 'clusterstate', 'clusterstats', 'nodeinfo', 'nodestats']
 
-NODETYPES = ['master', 'data', 'ml', 'ingest']
+NODETYPES = ['cluster', 'coordinating', 'master', 'data', 'ml', 'ingest']
 
 FILEPATHS = [
     path.join(path.expanduser('~'), '.es_stats_zabbix', 'config.yml'),
@@ -10,14 +14,14 @@ FILEPATHS = [
 ]
 
 SKIP_THESE = [
-    'get', 
-    'os', 
-    'update', 
-    'keys', 
-    'items', 
-    'mappings', 
-    'snapshots', 
-    'metadata', 
+    'get',
+    'os',
+    'update',
+    'keys',
+    'items',
+    'mappings',
+    'snapshots',
+    'metadata',
     'type.default',
     'adaptive_selection',
     'max_unsafe_auto_id_timestamp'
@@ -43,7 +47,7 @@ def apis():
 def config_file(testpath=[]):
     """
     Default Config file location
-    
+
     Return the first file that matches from constant FILEPATHS, otherwise None
     """
     for file in FILEPATHS + testpath:

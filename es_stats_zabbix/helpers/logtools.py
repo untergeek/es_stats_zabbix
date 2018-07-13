@@ -1,10 +1,15 @@
+"""
+Logging module
+"""
+
 import sys
-import json
-import logging
 import time
+import logging
+import json
 from es_client.helpers.utils import ensure_list
 
 class LogstashFormatter(logging.Formatter):
+    """Set up log formatting for JSON or plain or debug"""
     # The LogRecord attributes we want to carry over to the Logstash message,
     # mapped to the corresponding output key.
     WANTED_ATTRS = {'levelname': 'loglevel',
@@ -27,6 +32,7 @@ class LogstashFormatter(logging.Formatter):
         return json.dumps(result, sort_keys=True)
 
 class Whitelist(logging.Filter):
+    """Define a whitelist of acceptable log sources"""
     def __init__(self, *whitelist):
         self.whitelist = [logging.Filter(name) for name in whitelist]
 
@@ -34,10 +40,12 @@ class Whitelist(logging.Filter):
         return any(f.filter(record) for f in self.whitelist)
 
 class Blacklist(Whitelist):
+    """Define a blacklist of blockable log sources"""
     def filter(self, record):
         return not Whitelist.filter(self, record)
 
 class LogInfo(object):
+    """LogInfo class to establish the root logger"""
     def __init__(self, cfg):
         cfg['loglevel'] = 'INFO' if not 'loglevel' in cfg else cfg['loglevel']
         cfg['logfile'] = None if not 'logfile' in cfg else cfg['logfile']
@@ -63,6 +71,7 @@ class LogInfo(object):
             self.handler.setFormatter(logging.Formatter(self.format_string))
 
 def set_logging(log_opts):
+    """Set up the root handler"""
     from logging import NullHandler
     # Set up logging
     loginfo = LogInfo(log_opts)

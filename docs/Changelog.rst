@@ -3,7 +3,7 @@
 Changelog
 =========
 
-0.9.10 (? ? ?)
+0.9.12 (? ? ?)
 --------------
 
 **Alpha-release of pending 1.0 version**
@@ -50,6 +50,13 @@ Changelog
     6.x minor releases) and Python client versions (2.7, 3.5, 3.6)
   * Add ``esz_nodes_discovery`` for node related macros for discovery.
   * Add systemd service file.
+  * Full test of prototype template with discovery of cluster and nodes.
+  * Added ``esz_cluster_discovery`` for cluster related macros for LLD.
+  * Added ``run_display_endpoints.py`` to show all endpoints for a given node.
+    This works better with ``--apidebug`` enabled in the backend, as it pretty
+    prints the results.
+  * Reworked the launch scripts to use similar code as much as possible.
+  * Moved a lot of classes and modules around.
 
 0.1.4 (22 June 2016)
 --------------------

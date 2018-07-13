@@ -34,6 +34,433 @@ backend:
   apidebug: false
   cache_timeout: 60
 
+zabbix:
+  ServerActive:
+  ServerPort:
+  LogType: 'file'
+  LogFile: '/tmp/zabbix_agentd.log'
+  DebugLevel: 3
+  Timeout: 3
+  Hostname:
+  TLSConnect: 'unencrypted'
+  TLSCAFile:
+  TLSCertFile:
+  TLSCRLFile:
+  TLSKeyFile:
+  TLSServerCertIssuer:
+  TLSServerCertSubject:
+  TLSPSKIdentity:
+  TLSPSKFile:
+
+endpoints:
+  cluster:
+    60s:
+      clusterstats:
+        - _nodes.total
+        - _nodes.successful
+        - _nodes.failed
+        - indices.count
+        - indices.shards.total
+        - indices.shards.primaries
+        - indices.shards.replication
+        - indices.shards.index.shards.min
+        - indices.shards.index.shards.max
+        - indices.shards.index.shards.avg
+        - indices.shards.index.primaries.min
+        - indices.shards.index.primaries.max
+        - indices.shards.index.primaries.avg
+        - indices.shards.index.replication.min
+        - indices.shards.index.replication.max
+        - indices.shards.index.replication.avg
+        - indices.docs.count
+        - indices.docs.deleted
+        - indices.store.size_in_bytes
+        - indices.fielddata.memory_size_in_bytes
+        - indices.fielddata.evictions
+        - indices.query_cache.memory_size_in_bytes
+        - indices.query_cache.total_count
+        - indices.query_cache.hit_count
+        - indices.query_cache.miss_count
+        - indices.query_cache.cache_size
+        - indices.query_cache.cache_count
+        - indices.query_cache.evictions
+        - indices.completion.size_in_bytes
+        - indices.segments.count
+        - indices.segments.memory_in_bytes
+        - indices.segments.terms_memory_in_bytes
+        - indices.segments.stored_fields_memory_in_bytes
+        - indices.segments.term_vectors_memory_in_bytes
+        - indices.segments.norms_memory_in_bytes
+        - indices.segments.points_memory_in_bytes
+        - indices.segments.doc_values_memory_in_bytes
+        - indices.segments.index_writer_memory_in_bytes
+        - indices.segments.version_map_memory_in_bytes
+        - indices.segments.fixed_bit_set_memory_in_bytes
+        - nodes.count.total
+        - nodes.count.data
+        - nodes.count.coordinating_only
+        - nodes.count.master
+        - nodes.count.ingest
+        - nodes.process.cpu.percent
+        - nodes.process.open_file_descriptors.min
+        - nodes.process.open_file_descriptors.max
+        - nodes.process.open_file_descriptors.avg
+        - nodes.jvm.max_uptime_in_millis
+        - nodes.jvm.mem.heap_used_in_bytes
+        - nodes.jvm.mem.heap_max_in_bytes
+        - nodes.jvm.threads
+        - nodes.fs.total_in_bytes
+        - nodes.fs.free_in_bytes
+        - nodes.fs.available_in_bytes
+  coordinating:
+    60s:
+      nodestats:
+        - jvm.buffer_pools.direct.used_in_bytes
+        - jvm.gc.collectors.young.collection_count
+        - jvm.gc.collectors.young.collection_time_in_millis
+        - jvm.mem.heap_used_in_bytes
+        - jvm.mem.pools.old.used_in_bytes
+        - jvm.mem.pools.survivor.used_in_bytes
+        - jvm.mem.pools.young.used_in_bytes
+        - jvm.threads.count
+        - process.cpu.percent
+        - process.open_file_descriptors
+        - script.compilations
+    300s:
+      nodestats:
+        - jvm.buffer_pools.direct.count
+        - jvm.buffer_pools.mapped.count
+        - jvm.mem.heap_committed_in_bytes
+        - jvm.mem.heap_max_in_bytes
+        - jvm.mem.non_heap_committed_in_bytes
+        - jvm.mem.non_heap_used_in_bytes
+        - jvm.mem.pools.old.max_in_bytes
+        - jvm.mem.pools.old.peak_max_in_bytes
+        - jvm.mem.pools.old.peak_used_in_bytes
+        - jvm.mem.pools.survivor.max_in_bytes
+        - jvm.mem.pools.survivor.peak_max_in_bytes
+        - jvm.mem.pools.survivor.peak_used_in_bytes
+        - jvm.mem.pools.young.max_in_bytes
+        - jvm.mem.pools.young.peak_max_in_bytes
+        - jvm.mem.pools.young.peak_used_in_bytes
+        - jvm.threads.peak_count
+    900s:
+      nodeinfo:
+        - jvm.using_compressed_ordinary_object_pointers
+        - jvm.version
+        - jvm.vm_name
+        - jvm.vm_vendor
+        - jvm.vm_version
+        - name
+        - process.mlockall
+        - settings.http.compression
+        - version
+      nodestats:
+        - jvm.buffer_pools.direct.total_capacity_in_bytes
+        - jvm.buffer_pools.mapped.total_capacity_in_bytes
+        - process.max_file_descriptors
+  data:
+    60s:
+      nodestats:
+        - indices.docs.count
+        - indices.docs.deleted
+        - indices.store.size_in_bytes
+        - indices.indexing.index_total
+        - indices.indexing.index_time_in_millis
+        - indices.indexing.index_current
+        - indices.indexing.index_failed
+        - indices.indexing.delete_total
+        - indices.indexing.delete_time_in_millis
+        - indices.indexing.delete_current
+        - indices.indexing.noop_update_total
+        - indices.indexing.is_throttled
+        - indices.indexing.throttle_time_in_millis
+        - indices.search.open_contexts
+        - indices.search.query_total
+        - indices.search.query_time_in_millis
+        - indices.search.query_current
+        - indices.search.fetch_total
+        - indices.search.fetch_time_in_millis
+        - indices.search.fetch_current
+        - indices.search.scroll_total
+        - indices.search.scroll_time_in_millis
+        - indices.search.scroll_current
+        - indices.search.suggest_total
+        - indices.search.suggest_time_in_millis
+        - indices.search.suggest_current
+        - indices.merges.current
+        - indices.merges.current_docs
+        - indices.merges.current_size_in_bytes
+        - indices.merges.total
+        - indices.merges.total_time_in_millis
+        - indices.merges.total_docs
+        - indices.merges.total_size_in_bytes
+        - indices.merges.total_stopped_time_in_millis
+        - indices.merges.total_throttled_time_in_millis
+        - indices.merges.total_auto_throttle_in_bytes
+        - indices.refresh.total
+        - indices.refresh.total_time_in_millis
+        - indices.refresh.listeners
+        - indices.flush.total
+        - indices.flush.periodic
+        - indices.flush.total_time_in_millis
+        - indices.warmer.current
+        - indices.warmer.total
+        - indices.warmer.total_time_in_millis
+        - indices.query_cache.memory_size_in_bytes
+        - indices.query_cache.total_count
+        - indices.query_cache.hit_count
+        - indices.query_cache.miss_count
+        - indices.query_cache.cache_size
+        - indices.query_cache.cache_count
+        - indices.query_cache.evictions
+        - indices.fielddata.memory_size_in_bytes
+        - indices.fielddata.evictions
+        - indices.completion.size_in_bytes
+        - indices.segments.count
+        - indices.segments.memory_in_bytes
+        - indices.segments.terms_memory_in_bytes
+        - indices.segments.stored_fields_memory_in_bytes
+        - indices.segments.term_vectors_memory_in_bytes
+        - indices.segments.norms_memory_in_bytes
+        - indices.segments.points_memory_in_bytes
+        - indices.segments.doc_values_memory_in_bytes
+        - indices.segments.index_writer_memory_in_bytes
+        - indices.segments.version_map_memory_in_bytes
+        - indices.segments.fixed_bit_set_memory_in_bytes
+        - indices.translog.operations
+        - indices.translog.size_in_bytes
+        - indices.translog.uncommitted_operations
+        - indices.translog.uncommitted_size_in_bytes
+        - indices.translog.earliest_last_modified_age
+        - indices.request_cache.memory_size_in_bytes
+        - indices.request_cache.evictions
+        - indices.request_cache.hit_count
+        - indices.request_cache.miss_count
+        - indices.recovery.current_as_source
+        - indices.recovery.current_as_target
+        - indices.recovery.throttle_time_in_millis
+        - breakers.request.overhead
+        - breakers.request.tripped
+        - breakers.fielddata.overhead
+        - breakers.fielddata.tripped
+        - breakers.in_flight_requests.overhead
+        - breakers.in_flight_requests.tripped
+        - breakers.accounting.overhead
+        - breakers.accounting.tripped
+        - breakers.parent.overhead
+        - breakers.parent.tripped
+        - script.compilations
+        - script.cache_evictions
+        - fs.total.free_in_bytes
+        - fs.total.available_in_bytes
+        - thread_pool.analyze.threads
+        - thread_pool.analyze.queue
+        - thread_pool.analyze.active
+        - thread_pool.analyze.rejected
+        - thread_pool.fetch_shard_started.threads
+        - thread_pool.fetch_shard_started.queue
+        - thread_pool.fetch_shard_started.active
+        - thread_pool.fetch_shard_started.rejected
+        - thread_pool.fetch_shard_store.threads
+        - thread_pool.fetch_shard_store.queue
+        - thread_pool.fetch_shard_store.active
+        - thread_pool.fetch_shard_store.rejected
+        - thread_pool.flush.threads
+        - thread_pool.flush.queue
+        - thread_pool.flush.active
+        - thread_pool.flush.rejected
+        - thread_pool.force_merge.threads
+        - thread_pool.force_merge.queue
+        - thread_pool.force_merge.active
+        - thread_pool.force_merge.rejected
+        - thread_pool.generic.threads
+        - thread_pool.generic.queue
+        - thread_pool.generic.active
+        - thread_pool.generic.rejected
+        - thread_pool.index.threads
+        - thread_pool.index.queue
+        - thread_pool.index.active
+        - thread_pool.index.rejected
+        - thread_pool.listener.threads
+        - thread_pool.listener.queue
+        - thread_pool.listener.active
+        - thread_pool.listener.rejected
+        - thread_pool.management.threads
+        - thread_pool.management.queue
+        - thread_pool.management.active
+        - thread_pool.management.rejected
+        - thread_pool.refresh.threads
+        - thread_pool.refresh.queue
+        - thread_pool.refresh.active
+        - thread_pool.refresh.rejected
+        - thread_pool.search.threads
+        - thread_pool.search.queue
+        - thread_pool.search.active
+        - thread_pool.search.rejected
+        - thread_pool.snapshot.threads
+        - thread_pool.snapshot.queue
+        - thread_pool.snapshot.active
+        - thread_pool.snapshot.rejected
+        - thread_pool.warmer.threads
+        - thread_pool.warmer.queue
+        - thread_pool.warmer.active
+        - thread_pool.warmer.rejected
+        - thread_pool.watcher.threads
+        - thread_pool.watcher.queue
+        - thread_pool.watcher.active
+        - thread_pool.watcher.rejected
+        - thread_pool.write.threads
+        - thread_pool.write.queue
+        - thread_pool.write.active
+        - thread_pool.write.rejected
+    300s:
+      nodestats:
+        - transport.rx_size_in_bytes
+        - transport.tx_size_in_bytes
+        - fs.total.total_in_bytes
+        - breakers.request.limit_size_in_bytes
+        - breakers.request.limit_size
+        - breakers.fielddata.limit_size_in_bytes
+        - breakers.fielddata.limit_size
+        - breakers.in_flight_requests.limit_size_in_bytes
+        - breakers.in_flight_requests.limit_size
+        - breakers.accounting.limit_size_in_bytes
+        - breakers.accounting.limit_size
+        - breakers.parent.limit_size_in_bytes
+        - breakers.parent.limit_size
+        - breakers.request.estimated_size_in_bytes
+        - breakers.request.estimated_size
+        - breakers.fielddata.estimated_size_in_bytes
+        - breakers.fielddata.estimated_size
+        - breakers.in_flight_requests.estimated_size_in_bytes
+        - breakers.in_flight_requests.estimated_size
+        - breakers.accounting.estimated_size_in_bytes
+        - breakers.accounting.estimated_size
+        - breakers.parent.estimated_size_in_bytes
+        - breakers.parent.estimated_size
+        - thread_pool.analyze.largest
+        - thread_pool.fetch_shard_started.largest
+        - thread_pool.fetch_shard_store.largest
+        - thread_pool.flush.largest
+        - thread_pool.force_merge.largest
+        - thread_pool.generic.largest
+        - thread_pool.index.largest
+        - thread_pool.listener.largest
+        - thread_pool.management.largest
+        - thread_pool.refresh.largest
+        - thread_pool.rollup_indexing.largest
+        - thread_pool.search.largest
+        - thread_pool.security-token-key.largest
+        - thread_pool.snapshot.largest
+        - thread_pool.warmer.largest
+        - thread_pool.watcher.largest
+        - thread_pool.write.largest
+    900s:
+      nodeinfo:
+        - thread_pool.watcher.type
+        - thread_pool.watcher.min
+        - thread_pool.watcher.max
+        - thread_pool.watcher.queue_size
+        - thread_pool.force_merge.type
+        - thread_pool.force_merge.min
+        - thread_pool.force_merge.max
+        - thread_pool.force_merge.queue_size
+        - thread_pool.security-token-key.type
+        - thread_pool.security-token-key.min
+        - thread_pool.security-token-key.max
+        - thread_pool.security-token-key.queue_size
+        - thread_pool.fetch_shard_started.type
+        - thread_pool.fetch_shard_started.min
+        - thread_pool.fetch_shard_started.max
+        - thread_pool.fetch_shard_started.keep_alive
+        - thread_pool.fetch_shard_started.queue_size
+        - thread_pool.listener.type
+        - thread_pool.listener.min
+        - thread_pool.listener.max
+        - thread_pool.listener.queue_size
+        - thread_pool.index.type
+        - thread_pool.index.min
+        - thread_pool.index.max
+        - thread_pool.index.queue_size
+        - thread_pool.refresh.type
+        - thread_pool.refresh.min
+        - thread_pool.refresh.max
+        - thread_pool.refresh.keep_alive
+        - thread_pool.refresh.queue_size
+        - thread_pool.generic.type
+        - thread_pool.generic.min
+        - thread_pool.generic.max
+        - thread_pool.generic.keep_alive
+        - thread_pool.generic.queue_size
+        - thread_pool.rollup_indexing.type
+        - thread_pool.rollup_indexing.min
+        - thread_pool.rollup_indexing.max
+        - thread_pool.rollup_indexing.queue_size
+        - thread_pool.warmer.type
+        - thread_pool.warmer.min
+        - thread_pool.warmer.max
+        - thread_pool.warmer.keep_alive
+        - thread_pool.warmer.queue_size
+        - thread_pool.search.type
+        - thread_pool.search.min
+        - thread_pool.search.max
+        - thread_pool.search.queue_size
+        - thread_pool.flush.type
+        - thread_pool.flush.min
+        - thread_pool.flush.max
+        - thread_pool.flush.keep_alive
+        - thread_pool.flush.queue_size
+        - thread_pool.fetch_shard_store.type
+        - thread_pool.fetch_shard_store.min
+        - thread_pool.fetch_shard_store.max
+        - thread_pool.fetch_shard_store.keep_alive
+        - thread_pool.fetch_shard_store.queue_size
+        - thread_pool.management.type
+        - thread_pool.management.min
+        - thread_pool.management.max
+        - thread_pool.management.keep_alive
+        - thread_pool.management.queue_size
+        - thread_pool.analyze.type
+        - thread_pool.analyze.min
+        - thread_pool.analyze.max
+        - thread_pool.analyze.queue_size
+        - thread_pool.write.type
+        - thread_pool.write.min
+        - thread_pool.write.max
+        - thread_pool.write.queue_size
+        - thread_pool.snapshot.type
+        - thread_pool.snapshot.min
+        - thread_pool.snapshot.max
+        - thread_pool.snapshot.keep_alive
+        - thread_pool.snapshot.queue_size
+      nodestats:
+        - thread_pool.analyze.completed
+        - thread_pool.fetch_shard_started.completed
+        - thread_pool.fetch_shard_store.completed
+        - thread_pool.flush.completed
+        - thread_pool.force_merge.completed
+        - thread_pool.generic.completed
+        - thread_pool.index.completed
+        - thread_pool.listener.completed
+        - thread_pool.management.completed
+        - thread_pool.refresh.completed
+        - thread_pool.rollup_indexing.completed
+        - thread_pool.search.completed
+        - thread_pool.security-token-key.completed
+        - thread_pool.snapshot.completed
+        - thread_pool.warmer.completed
+        - thread_pool.watcher.completed
+        - thread_pool.write.completed
+  ingest:
+    60s:
+      nodestats:
+        - ingest.total.count
+        - ingest.total.time_in_millis
+        - ingest.total.current
+        - ingest.total.failed
+
+
 do_not_discover:
   health: 
     - status # This is monitored directly (not discovered), as it has a special value map
@@ -54,6 +481,7 @@ do_not_discover:
     - transport.publish_address
     - http.publish_address
     - http.max_content_length_in_bytes
+    - jvm.mem.heap_max_in_bytes
   nodestats:
     - timestamp
     - name

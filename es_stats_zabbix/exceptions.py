@@ -1,3 +1,7 @@
+"""
+Exception module
+"""
+
 class ESZException(Exception):
     """
     Base class for all exceptions raised by es_stats_zabbix which are not Elasticsearch

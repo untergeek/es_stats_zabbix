@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Launch Node Discovery
+Launch Trapper-based stat gathering
 """
 
 from es_stats_zabbix.cli.entrypoint import run
