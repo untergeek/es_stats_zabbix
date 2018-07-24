@@ -3,17 +3,17 @@
 Changelog
 =========
 
-0.9.12 (? ? ?)
---------------
+0.10.9 (23 July 2018)
+---------------------
 
-**Alpha-release of pending 1.0 version**
+**Beta-release of pending 1.0 version**
 
   * Basically a complete rewrite.  This version is not yet ready for mass
     consumption.  Still pending are:
-    - Zabbix 3.x template for 5.x and 6.x ES versions.
+    - Zabbix 3.x template for 5.x ES versions.
     - Installation scripts/config files
     - Init scripts for the backend (SysV, Upstart)
-    - Documentation
+    - More documentation
     - Make different templates for different Zabbix versions, if necessary.
   * Testing this pre-release version requires a ``git clone`` and
     ``python setup.py install`` or ``pip install .`` from the source directory.
@@ -38,7 +38,7 @@ Changelog
   * Block individual endpoints from LLD by enumerating them in the
     ``do_not_discover`` block in the configuration file.
 
-**Interim Fix List**
+**Other**
 
   * Fixed issues with the config_override function not behaving as expected.
   * Pruned unnecessary code.
@@ -57,6 +57,9 @@ Changelog
     prints the results.
   * Reworked the launch scripts to use similar code as much as possible.
   * Moved a lot of classes and modules around.
+  * Template for ES 6.3 (may work for any 6.x).
+  * Default ``config.yml`` for Elasticsearch 6.x
+  * Initial documentation created
 
 0.1.4 (22 June 2016)
 --------------------

@@ -18,7 +18,9 @@ def false_to_none(ctx, param, value):
         retval = None
     return retval
 
-@click.command()
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+
+@click.command(context_settings=CONTEXT_SETTINGS)
 @click.option('--config', help='Path to configuration file.', default=config_file(),
               show_default=True)
 @click.option('--host', multiple=True, help='Elasticsearch host.')

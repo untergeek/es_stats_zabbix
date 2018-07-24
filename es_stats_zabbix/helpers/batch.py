@@ -70,11 +70,12 @@ def get_endpoints(statobjs, api, node=None, valuetype=None):
     """
     Get the endpoints matching only the provided valuetype
     """
+    LOGGER.debug('ITERATION: API={0}, node={1}, valuetype={2}'.format(api, node, valuetype))
     try:
         nodeid = get_nodeid(statobjs, node)
     except NotFound:
-        LOGGER.info('No specific node name provided.')
         nodeid = statobjs['health'].local_id
+        LOGGER.debug('No specific node name provided. Using "{0}"'.format(nodeid))
     if api in ['health', 'clusterstate', 'clusterstats']:
         full = statobjs[api].stats()
     else:

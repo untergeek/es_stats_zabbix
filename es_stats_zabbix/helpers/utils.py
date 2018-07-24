@@ -128,7 +128,6 @@ def get_nodeid(statobjs, node):
     found = False
     if not node:
         msg = 'No node name provided.'
-        LOGGER.critical(msg)
         raise NotFound(msg)
     for n_i in nodeinfo:
         if nodeinfo[n_i]['name'] == node:
