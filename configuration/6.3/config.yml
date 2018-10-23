@@ -29,9 +29,9 @@ logging:
   blacklist: ['elasticsearch', 'urllib3', 'werkzeug']
 
 backend:
-  apihost: 127.0.0.1
-  apiport: 7600
-  apidebug: false
+  host: 127.0.0.1
+  port: 7600
+  debug: false
   cache_timeout: 60
 
 zabbix:
