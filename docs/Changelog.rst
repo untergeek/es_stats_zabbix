@@ -3,8 +3,8 @@
 Changelog
 =========
 
-0.10.9 (23 July 2018)
----------------------
+0.10.10 (30 October 2018)
+-------------------------
 
 **Beta-release of pending 1.0 version**
 
@@ -60,6 +60,10 @@ Changelog
   * Template for ES 6.3 (may work for any 6.x).
   * Default ``config.yml`` for Elasticsearch 6.x
   * Initial documentation created
+  * Absence of ``protobix`` corrected (jameskirsop) #8
+  * Removed superfluous ``api`` prefixes in ``config.yml`` (untergeek) #10
+  * Pinned ``click`` version to be less than 7.0 for now
+  
 
 0.1.4 (22 June 2016)
 --------------------
